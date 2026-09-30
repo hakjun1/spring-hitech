@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 정보 입력</title>
+</head>
+<body>
+<h1>학생 정보 입력</h1>
+<form th:action="@{/student}"
+      th:object="${student}"
+      method="post">
+    <p>
+        <label for="name">이름:</label>
+        <input type="text" id="name" th:field="*{name}">
+        <span th:if="${#fields.hasErrors('name')}"
+              th:errors="*{name}">이름 오류
+        </span>
+
+    </p>
+    <p>
+        <label for="major">학과:</label>
+        <input type="text" id="major" th:field="*{major}">
+        <span th:if="${#fields.hasErrors('major')}"
+              th:errors="*{major}">학과 오류
+        </span>
+
+    </p>
+    <p>
+        <label for="grade">학년:</label>
+        <input type="number" id="grade" th:field="*{grade}">
+        <span th:if="${#fields.hasErrors('grade')}"
+              th:errors="*{grade}">학년 오류
+        </span>
+    </p>
+
+    <button type="submit">전송</button>
+</form>
+</body>
+</html>

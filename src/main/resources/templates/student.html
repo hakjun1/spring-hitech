@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 정보</title>
+</head>
+<body>
+<h1>학생 정보</h1>
+<p>이름: <span th:text="${student.name}">이름</span></p>
+<p>학과: <span th:text="${student.major}">학과</span></p>
+<p>학년: <span th:text="${student.grade}">학년</span></p>
+</body>
+</html>
