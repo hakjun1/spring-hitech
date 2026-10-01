@@ -15,6 +15,16 @@ public class Student {
     @Max(value = 2, message = "학년은 2 이하여야 합니다.")
     private int grade;
 
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }

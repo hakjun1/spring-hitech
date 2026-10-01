@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>학생 목록</title>
+</head>
+<body>
+<h1>학생 목록</h1>
+<table border="1">
+    <thead>
+    <p>총 <span th:text="${students.size()}"></span>명
+    </p>
+    <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>학과</th>
+        <th>학년</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.id}">1</td>
+        <td>
+            <a th:href="@{/students/{id}(id=${student.id})}"
+               th:text="${student.name}">
+            </a>
+        </td>
+        <td th:text="${student.major}"></td>
+        <td th:text="${student.grade}"></td>
+        <td>
+            <a th:href="@{/students/{id}/edit(id=${student.id})}">수정</a>
+
+            <form th:action="@{/students/{id}/delete(id=${student.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">삭제</button>
+            </form>
+    </tr>
+    </tbody>
+</table>
+<p><a th:href="@{/student-form}">학생 등록하기</a></p>
+</body>
+</html>
