@@ -1,10 +1,20 @@
 package kr.ac.kopo.backendintro.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
 public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank(message = "이름을 입력하세요.")
     private String name;
 
@@ -14,8 +24,6 @@ public class Student {
     @Min(value = 1, message = "학년은 1 이상이어야 합니다.")
     @Max(value = 2, message = "학년은 2 이하여야 합니다.")
     private int grade;
-
-    private Long id;
 
     public Long getId() {
         return id;

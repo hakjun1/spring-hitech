@@ -46,7 +46,11 @@ public class StudentController {
     @GetMapping("/students/{id}")
     public String studentDetail(@PathVariable Long id,
                                 Model model) {
-        Student student = studentRepository.findById(id);
+        Student student = studentRepository.findById(id)
+                .orElse(null);
+        if (student == null) {
+            return "redirect:/students";
+        }
         model.addAttribute("student", student);
         return "student-detail";
     }
@@ -54,7 +58,11 @@ public class StudentController {
     @GetMapping("/students/{id}/edit")
     public String studentEditForm(@PathVariable Long id,
                                   Model model) {
-        Student student = studentRepository.findById(id);
+        Student student = studentRepository.findById(id)
+                .orElse(null);
+        if (student == null) {
+            return "redirect:/students";
+        }
         model.addAttribute("student", student);
         return "student-edit";
     }
@@ -67,7 +75,8 @@ public class StudentController {
             student.setId(id);
             return "student-edit";
         }
-        studentRepository.update(id, student);
+        student.setId(id);
+        studentRepository.save(student);
         return "redirect:/students";
     }
 
