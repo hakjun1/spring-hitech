@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>과정 목록</title>
+</head>
+<body>
+<h1>과정 목록</h1>
+<form th:action="@{/courses}" method="get">
+    <input type="text" name="subjectKeyword"
+           th:value="${subjectKeyword}" placeholder="과정명">
+    <input type="text" name="teacherKeyword"
+           th:value="${teacherKeyword}" placeholder="담당교수">
+    <select name="sortField">
+        <option value="id" th:selected="${sortField == 'id'}">ID</option>
+        <option value="subject" th:selected="${sortField == 'subject'}">과정명</option>
+        <option value="teacher" th:selected="${sortField == 'teacher'}">담당교수</option>
+    </select>
+    <select name="sortDir">
+        <option value="asc" th:selected="${sortDir == 'asc'}">오름차순</option>
+        <option value="desc" th:selected="${sortDir == 'desc'}">내림차순</option>
+    </select>
+    <input type="hidden" name="page" value="0">
+    <input type="hidden" name="size" th:value="${size}">
+    <button type="submit">검색</button>
+</form>
+<table border="1">
+    <thead>
+    <p>총 <span th:text="${courses.size()}"></span>개</p>
+    <tr>
+        <th>ID</th>
+        <th>과정명</th>
+        <th>담당교수</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.id}">1</td>
+        <td>
+            <a th:href="@{/courses/{id}(id=${course.id})}"
+               th:text="${course.subject}">
+            </a>
+        </td>
+        <td th:text="${course.teacher}"></td>
+        <td>
+            <a th:href="@{/courses/{id}/edit(id=${course.id})}">수정</a>
+
+            <form th:action="@{/courses/{id}/delete(id=${course.id})}"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div th:if="${totalPages > 0}">
+    <a th:if="${currentPage > 0}"
+       th:href="@{/courses(
+        page=${currentPage - 1},
+        size=${size},
+        subjectKeyword=${subjectKeyword},
+        teacherKeyword=${teacherKeyword},
+        sortField=${sortField},
+        sortDir=${sortDir})}">이전</a>
+    <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+        <strong th:if="${pageNumber == currentPage}"
+                th:text="${pageNumber + 1}">1</strong>
+        <a th:if="${pageNumber != currentPage}"
+           th:href="@{/courses(
+           page=${pageNumber},
+           size=${size},
+           subjectKeyword=${subjectKeyword},
+           teacherKeyword=${teacherKeyword},
+           sortField=${sortField},
+           sortDir=${sortDir})}"
+           th:text="${pageNumber + 1}">1</a>
+    </span>
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/courses(
+       page=${currentPage + 1},
+       size=${size},
+       subjectKeyword=${subjectKeyword},
+       teacherKeyword=${teacherKeyword},
+       sortField=${sortField},
+       sortDir=${sortDir})}">다음</a>
+</div>
+
+<p><a th:href="@{/course-form}">과정 등록하기</a></p>
+</body>
+</html>

@@ -6,6 +6,25 @@
 </head>
 <body>
 <h1>학생 목록</h1>
+<form th:action="@{/students}" method="get">
+    <input type="text" name="nameKeyword"
+           th:value="${nameKeyword}" placeholder="학생 이름">
+    <input type="text" name="majorKeyword"
+           th:value="${majorKeyword}" placeholder="학과">
+    <select name="sortField">
+        <option value="id" th:selected="${sortField == 'id'}">ID</option>
+        <option value="name" th:selected="${sortField == 'name'}">이름</option>
+        <option value="major" th:selected="${sortField == 'major'}">학과</option>
+        <option value="grade" th:selected="${sortField == 'grade'}">학년</option>
+    </select>
+    <select name="sortDir">
+        <option value="asc" th:selected="${sortDir == 'asc'}">오름차순</option>
+        <option value="desc" th:selected="${sortDir == 'desc'}">내림차순</option>
+    </select>
+    <input type="hidden" name="page" value="0">
+    <input type="hidden" name="size" th:value="${size}">
+    <button type="submit">검색</button>
+</form>
 <table border="1">
     <thead>
     <p>총 <span th:text="${students.size()}"></span>명
@@ -38,6 +57,39 @@
     </tr>
     </tbody>
 </table>
+<div th:if="${totalPages > 0}">
+    <a th:if="${currentPage > 0}"
+       th:href="@{/students(
+        page=${currentPage - 1},
+        size=${size},
+        nameKeyword=${nameKeyword},
+        majorKeyword=${majorKeyword},
+        sortField=${sortField},
+        sortDir=${sortDir})}">이전</a>
+    <span th:each="pageNumber :
+${#numbers.sequence(0, totalPages - 1)}">
+<strong th:if="${pageNumber == currentPage}"
+        th:text="${pageNumber + 1}">1</strong>
+<a th:if="${pageNumber != currentPage}"
+   th:href="@{/students(
+   page=${pageNumber},
+   size=${size},
+   nameKeyword=${nameKeyword},
+   majorKeyword=${majorKeyword},
+   sortField=${sortField},
+   sortDir=${sortDir})}"
+   th:text="${pageNumber + 1}">1</a>
+</span>
+    <a th:if="${currentPage < totalPages - 1}"
+       th:href="@{/students(
+       page=${currentPage + 1},
+       size=${size},
+       nameKeyword=${nameKeyword},
+       majorKeyword=${majorKeyword},
+       sortField=${sortField},
+       sortDir=${sortDir})}">다음</a>
+</div>
+
 <p><a th:href="@{/student-form}">학생 등록하기</a></p>
 </body>
 </html>

@@ -3,22 +3,24 @@ package kr.ac.kopo.backendintro.controller;
 import jakarta.validation.Valid;
 import kr.ac.kopo.backendintro.model.Student;
 import kr.ac.kopo.backendintro.repository.StudentRepository;
+import kr.ac.kopo.backendintro.service.StudentService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class StudentController {
 
-    private final StudentRepository studentRepository;
+    private final StudentService studentService;
 
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
+
 
     @GetMapping("/student-form")
     public String studentForm(Model model) {
@@ -33,21 +35,40 @@ public class StudentController {
         if (bindingResult.hasErrors()) {
             return "student-form";
         }
-        studentRepository.save(student);
+        studentService.save(student);
         return "redirect:/students";
     }
 
     @GetMapping("/students")
-    public String students(Model model) {
-        model.addAttribute("students", studentRepository.findAll());
+    public String students(
+            @RequestParam(required = false) String nameKeyword,
+            @RequestParam(required = false) String majorKeyword,
+            @RequestParam(defaultValue = "id") String sortField,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+        Page<Student> studentPage = studentService.search(
+                nameKeyword, majorKeyword,
+                sortField, sortDir, page, size);
+        model.addAttribute("students", studentPage.getContent());
+        model.addAttribute("currentPage", studentPage.getNumber());
+        model.addAttribute("totalPages", studentPage.getTotalPages());
+        model.addAttribute("totalItems", studentPage.getTotalElements());
+        model.addAttribute("nameKeyword", nameKeyword);
+        model.addAttribute("majorKeyword", majorKeyword);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("size", size);
         return "students";
     }
+
+
 
     @GetMapping("/students/{id}")
     public String studentDetail(@PathVariable Long id,
                                 Model model) {
-        Student student = studentRepository.findById(id)
-                .orElse(null);
+        Student student = studentService.findById(id);
         if (student == null) {
             return "redirect:/students";
         }
@@ -58,8 +79,7 @@ public class StudentController {
     @GetMapping("/students/{id}/edit")
     public String studentEditForm(@PathVariable Long id,
                                   Model model) {
-        Student student = studentRepository.findById(id)
-                .orElse(null);
+        Student student = studentService.findById(id);
         if (student == null) {
             return "redirect:/students";
         }
@@ -68,21 +88,22 @@ public class StudentController {
     }
 
     @PostMapping("/students/{id}/edit")
-    public String studentEdit(@PathVariable Long id,
-                              @Valid @ModelAttribute Student student,
-                              BindingResult bindingResult) {
+    public String studentEdit(
+            @PathVariable Long id,
+            @Valid @ModelAttribute Student student,
+            BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             student.setId(id);
             return "student-edit";
         }
-        student.setId(id);
-        studentRepository.save(student);
+        studentService.update(id, student);
         return "redirect:/students";
     }
 
     @PostMapping("/students/{id}/delete")
     public String studentDelete(@PathVariable Long id) {
-        studentRepository.deleteById(id);
+        studentService.deleteById(id);
         return "redirect:/students";
     }
 

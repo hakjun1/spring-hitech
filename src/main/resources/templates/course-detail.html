@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>과정 상세정보</title>
+</head>
+<body>
+<h1>과정 상세정보</h1>
+<p>ID: <span th:text="${course.id}">1</span></p>
+<p>과정명: <span th:text="${course.subject}">자바프로그래밍</span></p>
+<p>담당교수: <span th:text="${course.teacher}">홍길동</span></p>
+
+<p>
+    <a th:href="@{/courses/{id}/edit(id=${course.id})}">수정</a>
+</p>
+
+<form th:action="@{/courses/{id}/delete(id=${course.id})}"
+      method="post">
+    <button type="submit">삭제</button>
+</form>
+
+<p><a th:href="@{/courses}">과정 목록으로 돌아가기</a></p>
+</body>
+</html>

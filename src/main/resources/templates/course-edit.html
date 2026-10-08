@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>과정 정보 수정</title>
+</head>
+<body>
+<h1>과정 정보 수정</h1>
+<form th:action="@{/courses/{id}/edit(id=${course.id})}"
+      th:object="${course}"
+      method="post">
+    <p>
+        <label for="subject">과정명:</label>
+        <input type="text" id="subject" th:field="*{subject}">
+        <span th:if="${#fields.hasErrors('subject')}"
+              th:errors="*{subject}">과정명 오류</span>
+    </p>
+    <p>
+        <label for="teacher">담당교수:</label>
+        <input type="text" id="teacher" th:field="*{teacher}">
+        <span th:if="${#fields.hasErrors('teacher')}"
+              th:errors="*{teacher}">담당교수 오류</span>
+    </p>
+    <button type="submit">수정</button>
+</form>
+<p><a th:href="@{/courses}">과정 목록으로 돌아가기</a></p>
+</body>
+</html>
