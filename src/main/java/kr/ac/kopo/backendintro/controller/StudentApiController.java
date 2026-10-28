@@ -19,7 +19,7 @@ public class StudentApiController {
         this.studentService = studentService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Student> students() {
         return studentService.findAll();
     }
@@ -80,13 +80,6 @@ public class StudentApiController {
                 sortField, sortDir, page, size);
         return ResponseEntity.ok(studentPage);
     }
-
-
-
-
-
-
-
 
 
 }

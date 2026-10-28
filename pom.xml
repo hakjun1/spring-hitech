@@ -71,6 +71,12 @@
             <artifactId>mssql-jdbc</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- 7일차에 추가한 Spring Security 의존성 -->
+        <!-- Spring Boot 가 호환 버전을 관리하므로 version 을 지정하지 않습니다. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
 
     </dependencies>
